@@ -8,7 +8,10 @@
 using namespace std;
 void game()
 {
-	int contr;
+	int contr, shuttle;
+	ifstream load("settings.txt");
+	load >> contr >> shuttle;
+	load.close();
 	while (true)
 	{
 		clear;
@@ -26,7 +29,7 @@ void game()
 		{
 		case 0:
 			frame();
-			game_process(contr);
+			game_process(contr,shuttle);
 			frame();
 			break;
 		case 1:
@@ -34,7 +37,7 @@ void game()
 			Game.load();
 			break;
 		case 2:
-			settings(contr);
+			settings(contr, shuttle);
 			break;
 		case 3:
 			exit(0);

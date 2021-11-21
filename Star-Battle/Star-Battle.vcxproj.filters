@@ -24,6 +24,12 @@
     <Text Include="rate.txt">
       <Filter>Файлы ресурсов</Filter>
     </Text>
+    <Text Include="plane1.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
+    <Text Include="settings.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

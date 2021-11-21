@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+ï»¿#define _CRT_SECURE_NO_WARNINGS
 #pragma once
 
 #include <conio.h>
@@ -46,7 +46,7 @@ struct Date
 		day = ltm->tm_mday;
 		hour = ltm->tm_hour;
 		minute = ltm->tm_min;
-		a << " | Âðåìÿ ïîïûòêè: ";
+		a << " | Ð’Ñ€ÐµÐ¼Ñ Ð¿Ð¾Ð¿Ñ‹Ñ‚ÐºÐ¸: ";
 		if (hour < 10)
 			a << "0";
 		a << hour << ":";
@@ -78,13 +78,14 @@ struct Game
 		bool flag = true;
 		while (flag)
 		{
-			cout << "Ââåäèòå ñâîå èìÿ(îò 3 ñèìâîëîâ): "; cin.getline(buffer, 80);
+			gotoxy(central_output(40),11);
+			cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ ÑÐ²Ð¾Ðµ Ð¸Ð¼Ñ(Ð¾Ñ‚ 3 Ð´Ð¾ 15 ÑÐ¸Ð¼Ð²Ð¾Ð»Ð¾Ð²): "; gotoxy(central_output(15), 12); cin.getline(buffer, 15);
 			if (strlen(buffer) <= 2)
 			{
 				for (size_t i = 0; i < 3; i++)
 				{
 					gotoxy(central_output(28),i+12);
-					cout << "Ââåäèòå äåéñòâèòåëüíîå èìÿ!";
+					cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð´ÐµÐ¹ÑÑ‚Ð²Ð¸Ñ‚ÐµÐ»ÑŒÐ½Ð¾Ðµ Ð¸Ð¼Ñ!";
 					Sleep(250);
 				}
 				clear_;
@@ -92,19 +93,19 @@ struct Game
 			else {
 				m.name = new char[strlen(buffer) + 1];
 				strcpy(m.name, buffer);
-				clear_;
 				m.score = score;
 				push_back_Array(p, size, m);
 				ofstream a("rate.txt", ios::app);
 				for (size_t i = 0; i < size; i++)
 				{
 					for (size_t i = 0; i < size; i++)
-						a << p[i].name << " | Ñ÷¸ò: " << m.score; m.date.print(a);
+						a << p[i].name << " | Ð¡Ñ‡Ñ‘Ñ‚: " << m.score; m.date.print(a);
 					a << endl;
 				}
 				a.close();
-				gotoxy((central_output(24)), 13);
-				cout << "Òâîé ïðîãðåññ ñîõðàíåí.";
+				frame();
+				gotoxy((central_output(24)), 11);
+				cout << "Ð¢Ð²Ð¾Ð¹ Ð¿Ñ€Ð¾Ð³Ñ€ÐµÑÑ ÑÐ¾Ñ…Ñ€Ð°Ð½ÐµÐ½.";
 				flag = false;
 			}
 		}
@@ -113,21 +114,22 @@ struct Game
 	{
 		ifstream check("rate.txt");
 		check.seekg(0, ios::end);
-		char buff[80]; int size = 0, file_size = check.tellg(); size_t i = 23;
+		char buff[80]; int size = 0, file_size = check.tellg(); size_t i =1;
 		check.close();
 		if (file_size == 0) {
 			gotoxy(central_output(25), 12);
-			cout << "Ñòàòèñòèêà îòñóòñòâóåò.\n";
+			cout << "Ð¡Ñ‚Ð°Ñ‚Ð¸ÑÑ‚Ð¸ÐºÐ° Ð¾Ñ‚ÑÑƒÑ‚ÑÑ‚Ð²ÑƒÐµÑ‚.\n";
 		}
 		else {
 			ifstream save("rate.txt");
+			size_t j = 1;
 			while (save.getline(buff, 80))
 			{
-				gotoxy((80 - strlen(buff)) / 2, i--);
-				cout << buff << endl;
-				if (i == 0) {
+				gotoxy((80 - strlen(buff)) / 2, i++);
+				cout << j++ << ". " << buff << endl;
+				if (i == 23) {
 					frame();
-					i = 23;
+					i = 1;
 				}
 				Sleep(150);
 			}
@@ -184,9 +186,11 @@ void entity_to_destroy()
 	}
 	entity.close();
 }
-void print_plane(int shift, int key, bool f, int right, int left)
+void print_plane(int shift, int key, bool f, int right, int left, int shuttle)
 {
-	ifstream plane("plane.txt");
+	string pl = "plane.txt";
+	if (shuttle == 1) { pl = "plane1.txt"; }
+	ifstream plane(pl);
 	char t[80]; int i = 15;
 	while (plane.getline(t, 80))
 	{
@@ -239,58 +243,68 @@ int shot(int shift, int* shots)
 	if (!shots[x])
 		return 0;
 }
-//#define left_arrow 75
-//#define right_arrow 77
-//#define space 32
-void game_process(int contr)
+#define esc 27
+void game_process(int contr, int shuttle)
 {
 	int left_arrow = 75, right_arrow = 77, shot_ = 72;
 	if (contr == 1) {
 		left_arrow = 97; right_arrow = 100; shot_ = 119;
 	}
 	entity_to_destroy();
-	print_plane(0, 0, 0, 0, 0);
-	int barrier = 34, shift = 0, score = 0, shot_temp = 0, health = 3;
+	print_plane(0, 0, 0, 0, 0, shuttle);
+	int barrier = 34, shift = 0, score = 0, shot_temp = 0, health = 3, seven = 7;
 	int shots[80];
 	bool flag = 0;
 	gotoxy(1, 23);
 	cout << "Score: " << score;
 	gotoxy(1, 1);
-	cout << "Health: " << health;
+	SetColor(Red, Black);
+	cout << "<3 <3 <3";
+	SetColor(LightGray, Black);
 	set_score_array(shots);
 	while (flag == 0)
 	{
 		int key = _getch();
 		if (barrier != 0 && key == left_arrow) {
 			shift += -1;
-			print_plane(shift, key, 1, right_arrow, left_arrow);
+			print_plane(shift, key, 1, right_arrow, left_arrow, shuttle);
 			barrier--;
 		}
 		if (barrier != 68 && key == right_arrow) {
 			shift += 1;
-			print_plane(shift, key, 1, right_arrow, left_arrow);
+			print_plane(shift, key, 1, right_arrow, left_arrow, shuttle);
 			barrier++;
 		}
 		if (key == shot_) {
 			shot_temp = shot(shift, shots);
 			if (shot_temp == 1)
 				score++;
-			if (shot_temp == 0)
+			if (shot_temp == 0) {
 				health--;
+				gotoxy(seven, 1);
+				seven -= 3;
+				cout << "  ";
+			}
+
 		}
+		if (key == esc)
+			return;
 		gotoxy(1, 23);
 		cout << "Score: " << score;
-		gotoxy(1, 1);
-		cout << "Health: " << health;
 		if (health == 0 or score == count_lenth())
 			flag = 1;
 	}
 	clear_;
-	if (health == 0)
-		cout << "Âû ïðîèãðàëè! ";
-	else
-		cout << "Âû ïðîøëè óðîâåíü! ";
-	cout << "Âàø ñ÷¸ò: " << score << endl;
+	if (health == 0) {
+		frame();
+		gotoxy(central_output(15), 2); cout << "Ð’Ñ‹ Ð¿Ñ€Ð¾Ð¸Ð³Ñ€Ð°Ð»Ð¸! ";
+	}
+	else {
+		frame();
+		gotoxy(central_output(20), 2); cout << "Ð’Ñ‹ Ð¿Ñ€Ð¾ÑˆÐ»Ð¸ ÑƒÑ€Ð¾Ð²ÐµÐ½ÑŒ! ";
+	}
+	gotoxy(central_output(14), 3);
+	cout << "Ð’Ð°Ñˆ ÑÑ‡Ñ‘Ñ‚: " << score;
 	Game t;
 	t.save(score);
 	system("pause>0");

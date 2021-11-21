@@ -18,7 +18,7 @@
 #define clear_ system("cls")
 
 using namespace std;
-void sett_controls(int& contr)
+void sett_controls(int& contr, int shuttle)
 {
 	clear_;
 	gotoxy(central_output(41),2); cout << "Добро пожаловать в настройки управления!\n";
@@ -31,37 +31,57 @@ void sett_controls(int& contr)
 		"Выход"
 	};
 	int ch = menu.select_vertical(m);
+	ofstream save("settings.txt");
 	switch (ch)
 	{
 	case 0:
 		contr = 1;
+		save << contr << " " << shuttle;
+		save.close();
 		break;
 	case 1:
 		contr = 0;
+		save << contr << " " << shuttle;
+		save.close();
 		break;
 	case 2:
 		return;
 	default:
 		break;
 	}
-	/*ofstream save("settings.bin", ios::binary);
-	for (size_t i = 0; i < 5; i++)
-	{
-		save.write((char*)&, sizeof(int));
-	}
-	int* a = nullptr; int size = 0;
-	ifstream load("settings.bin", ios::binary);
-	int t;
-	while (load.read((char*)&t, sizeof(int)))
-	{
-		push_back_Array(a, size, t);
-	}*/
 }
-void sett_shuttleSkin()
+void sett_shuttleSkin(int& shuttle, int contr)
 {
-
+	clear_;
+	gotoxy(central_output(41), 2); cout << "Добро пожаловать в настройки шаттла!\n";
+	gotoxy(central_output(35), 3); cout << "Как вы хотите видеть свой корабль?";
+	Menu menu;
+	vector<string> m = {
+		"Прототип №173",
+		"Стандартный",
+		"Выход"
+	};
+	int ch = menu.select_vertical(m);
+	ofstream save("settings.txt");
+	switch (ch)
+	{
+	case 0:
+		shuttle = 1;
+		save << contr << " " << shuttle;
+		save.close();
+		break;
+	case 1:
+		shuttle = 0;
+		save << contr << " " << shuttle;
+		save.close();
+		break;
+	case 2:
+		return;
+	default:
+		break;
+	}
 }
-void settings(int &contr)
+void settings(int &contr, int&shuttle)
 {
 	clear_;
 	Menu menu;
@@ -74,10 +94,10 @@ void settings(int &contr)
 	switch (ch)
 	{
 	case 0:
-		sett_controls(contr);
+		sett_controls(contr, shuttle);
 		break;
 	case 1:
-		/*sett_shuttleSkin();*/
+		sett_shuttleSkin(shuttle, contr);
 		break;
 	case 2:
 		return;

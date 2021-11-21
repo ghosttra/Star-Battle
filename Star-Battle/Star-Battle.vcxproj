@@ -142,7 +142,9 @@
   <ItemGroup>
     <Text Include="entity.txt" />
     <Text Include="plane.txt" />
+    <Text Include="plane1.txt" />
     <Text Include="rate.txt" />
+    <Text Include="settings.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
