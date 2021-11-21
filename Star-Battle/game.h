@@ -3,10 +3,12 @@
 #include<iostream>
 #include"menu.h"
 #include"process.h"
+#include"settings.h"
 #define clear system("cls")
 using namespace std;
 void game()
 {
+	int contr;
 	while (true)
 	{
 		clear;
@@ -16,6 +18,7 @@ void game()
 		vector<string> m = {
 			"Начать новую игру",
 			"Рейтинг",
+			"Настройки игры",
 			"Выход"
 		};
 		int ch = menu.select_vertical(m);
@@ -23,7 +26,7 @@ void game()
 		{
 		case 0:
 			frame();
-			game_process();
+			game_process(contr);
 			frame();
 			break;
 		case 1:
@@ -31,6 +34,9 @@ void game()
 			Game.load();
 			break;
 		case 2:
+			settings(contr);
+			break;
+		case 3:
 			exit(0);
 		default:
 			break;

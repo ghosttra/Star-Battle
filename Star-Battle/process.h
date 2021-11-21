@@ -14,9 +14,7 @@
 #include"functions.h"
 
 #define clear_ system("cls")
-#define left_arrow 75
-#define right_arrow 77
-#define space 32
+#define central_output(n) (80 - n)/2
 
 using namespace std;
 
@@ -86,7 +84,7 @@ struct Game
 			{
 				for (size_t i = 0; i < 3; i++)
 				{
-					gotoxy((80-28)/2,i+12);
+					gotoxy(central_output(28),i+12);
 					cout << "Введите действительное имя!";
 					Sleep(250);
 				}
@@ -106,7 +104,7 @@ struct Game
 					a << endl;
 				}
 				a.close();
-				gotoxy((80 - 24) / 2, 13);
+				gotoxy((central_output(24)), 13);
 				cout << "Твой прогресс сохранен.";
 				flag = false;
 			}
@@ -119,7 +117,7 @@ struct Game
 		char buff[80]; int size = 0, file_size = check.tellg(); size_t i = 23;
 		check.close();
 		if (file_size == 0) {
-			gotoxy((80 - 26) / 2, 12);
+			gotoxy(central_output(25), 12);
 			cout << "Статистика отсутствует.\n";
 		}
 		else {
@@ -187,7 +185,7 @@ void entity_to_destroy()
 	}
 	entity.close();
 }
-void print_plane(int shift, int key, bool f)
+void print_plane(int shift, int key, bool f, int right, int left)
 {
 	ifstream plane("plane.txt");
 	char t[80]; int i = 15;
@@ -202,9 +200,9 @@ void print_plane(int shift, int key, bool f)
 			cout << t << endl;
 			if (f) 
 			{
-				if (key == right_arrow)
+				if (key == right)
 					x--;
-				if (key == left_arrow)
+				if (key == left)
 					x += strlen(t);
 				gotoxy(x, i);
 				cout << ' ';
@@ -242,10 +240,17 @@ int shot(int shift, int* shots)
 	if (!shots[x])
 		return 0;
 }
-void game_process()
+//#define left_arrow 75
+//#define right_arrow 77
+//#define space 32
+void game_process(int contr)
 {
+	int left_arrow = 75, right_arrow = 77, shot_ = 72;
+	if (contr == 1) {
+		left_arrow = 97; right_arrow = 100; shot_ = 119;
+	}
 	entity_to_destroy();
-	print_plane(0, 0, 0);
+	print_plane(0, 0, 0, 0, 0);
 	int barrier = 34, shift = 0, score = 0, shot_temp = 0, health = 3;
 	int shots[80];
 	bool flag = 0;
@@ -257,29 +262,22 @@ void game_process()
 	while (flag == 0)
 	{
 		int key = _getch();
-		switch (key)
-		{
-		case left_arrow:
-			if (barrier != 0) {
-				shift += -1;
-				print_plane(shift, key, 1);
-				barrier--;
-			}
-			break;
-		case right_arrow:
-			if (barrier != 68) {
-				shift += 1;
-				print_plane(shift, key, 1);
-				barrier++; 
-			}
-			break;
-		case space:
+		if (barrier != 0 && key == left_arrow) {
+			shift += -1;
+			print_plane(shift, key, 1, right_arrow, left_arrow);
+			barrier--;
+		}
+		if (barrier != 68 && key == right_arrow) {
+			shift += 1;
+			print_plane(shift, key, 1, right_arrow, left_arrow);
+			barrier++;
+		}
+		if (key == shot_) {
 			shot_temp = shot(shift, shots);
 			if (shot_temp == 1)
 				score++;
 			if (shot_temp == 0)
 				health--;
-			break;
 		}
 		gotoxy(1, 23);
 		cout << "Score: " << score;
