@@ -138,53 +138,50 @@ struct Game
 		system("pause>0");
 	}
 };
-
-int count_lenth()
-{
-	ifstream entity("entity.txt");
-	char t[80], temp[80]; int i = 3, tempmax = 0;
-	while (entity.getline(t, 80))
-	{
-		if (strlen(t) > strlen(temp))
-		{
-			strcpy(temp, t);
-		}
-	}
-	tempmax = strlen(temp);
-	entity.close();
-	return tempmax;
-}
 void clear_str(int x)
 {
 	gotoxy(x, 1);
 	cout << ' ';
 }
-void set_score_array(int* shots)
+
+int entity_to_destroy()
 {
-	int barrier = (80 - count_lenth()) / 2;
+	srand(time(0));
+	int rand_len = 30 + rand() % (60 - 30);
+	char ch; int x, arr[12], max = 0;
+	for (size_t i = 0; i < 8; i++)
+	{
+		arr[i] = 0;
+		x = (80 - rand_len) / 2;
+		for (size_t j = 0; j < rand_len; j++)
+		{
+			arr[i]++;
+			ch = 34 + (1 + rand()% (4-1));
+			gotoxy(x++, i+3);
+			cout << ch;
+		}
+		rand_len = 30 + rand() % (60 - 30);
+		cout << endl;
+	}
+	for (size_t i = 0; i < 8; i++)
+	{
+		if (arr[i] > max)
+			max = arr[i];
+	}
+	return max;
+}
+void set_score_array(int* shots, int length)
+{
+	int barrier = (80 - length) / 2;
 	for (size_t i = 0; i < 79; i++)
 	{
-		if (i >= barrier && i <= barrier + count_lenth() - 1)
+		if (i >= barrier && i <= barrier + length - 1)
 			shots[i] = 1;
 		else
 			shots[i] = 0;
 		/*gotoxy(i, 24);
 		cout << shots[i];*/
 	}
-}
-
-void entity_to_destroy()
-{
-	ifstream entity("entity.txt");
-	char t[80], b[80], bt[80]; int i = 3, tempmax;
-	while (entity.getline(t, 80))
-	{
-		int x = ((80 - strlen(t)) / 2);
-		i++;
-		gotoxy(x, i);
-		cout << t << endl;
-	}
-	entity.close();
 }
 void print_plane(int shift, int key, bool f, int right, int left, int shuttle)
 {
@@ -214,10 +211,10 @@ void print_plane(int shift, int key, bool f, int right, int left, int shuttle)
 	}
 	plane.close();
 }
-int shot(int shift, int* shots)
+int shot(int shift, int* shots, int length)
 {
 	int x = 39 + shift, y = 16, ty = y - 1, f = 0, check = 0; char snaryad[2] = "!";
-	int barrier = (80 - count_lenth()) / 2;
+	int barrier = (80 - (length)) / 2;
 	while (y != 1)
 	{
 		y--;
@@ -250,9 +247,10 @@ void game_process(int contr, int shuttle)
 	if (contr == 1) {
 		left_arrow = 97; right_arrow = 100; shot_ = 119;
 	}
+	int length = entity_to_destroy();
 	entity_to_destroy();
 	print_plane(0, 0, 0, 0, 0, shuttle);
-	int barrier = 34, shift = 0, score = 0, shot_temp = 0, health = 3, seven = 7;
+	int barrier = 34, shift = 0, tscore = 0, score = 0, shot_temp = 0, health = 3, seven = 7;
 	int shots[80];
 	bool flag = 0;
 	gotoxy(1, 23);
@@ -261,9 +259,10 @@ void game_process(int contr, int shuttle)
 	SetColor(Red, Black);
 	cout << "<3 <3 <3";
 	SetColor(LightGray, Black);
-	set_score_array(shots);
+	set_score_array(shots, length);
 	while (flag == 0)
 	{
+		
 		int key = _getch();
 		if (barrier != 0 && key == left_arrow) {
 			shift += -1;
@@ -276,9 +275,12 @@ void game_process(int contr, int shuttle)
 			barrier++;
 		}
 		if (key == shot_) {
-			shot_temp = shot(shift, shots);
+			shot_temp = shot(shift, shots, length);
 			if (shot_temp == 1)
+			{
 				score++;
+				tscore++;
+			}	
 			if (shot_temp == 0) {
 				health--;
 				gotoxy(seven, 1);
@@ -291,18 +293,18 @@ void game_process(int contr, int shuttle)
 			return;
 		gotoxy(1, 23);
 		cout << "Score: " << score;
-		if (health == 0 or score == count_lenth())
+		if (tscore == length)
+		{
+			tscore = 0;
+			length = entity_to_destroy();
+			set_score_array(shots, length);
+		}
+		if (health == 0)
 			flag = 1;
 	}
 	clear_;
-	if (health == 0) {
-		frame();
-		gotoxy(central_output(15), 2); cout << "Вы проиграли! ";
-	}
-	else {
-		frame();
-		gotoxy(central_output(20), 2); cout << "Вы прошли уровень! ";
-	}
+	frame();
+	gotoxy(central_output(15), 2); cout << "Вы проиграли! ";
 	gotoxy(central_output(14), 3);
 	cout << "Ваш счёт: " << score;
 	Game t;

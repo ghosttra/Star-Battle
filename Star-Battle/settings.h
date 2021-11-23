@@ -23,10 +23,10 @@ void sett_controls(int& contr, int shuttle)
 	clear_;
 	gotoxy(central_output(41),2); cout << "Добро пожаловать в настройки управления!\n";
 	gotoxy(central_output(35),3); cout << "Как вы желаете управлять кораблем?";
-	gotoxy(central_output(49),4); cout << "По умолчанию: (Стелочки вправо и влево и пробел)";
+	gotoxy(central_output(49),4); cout << "По умолчанию: (Стелочки вправо и влево и вверх)";
 	Menu menu;
 	vector<string> m = {
-		"A-Влево, D-Вправо, Shift-Выстрел",
+		"A-Влево, D-Вправо, W-Выстрел",
 		"По умолчанию",
 		"Выход"
 	};
