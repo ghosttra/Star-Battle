@@ -158,6 +158,7 @@ int entity_to_destroy()
 			arr[i]++;
 			ch = 34 + (1 + rand()% (4-1));
 			gotoxy(x++, i+3);
+			SetColor(7+rand()%(13-7), Black);
 			cout << ch;
 		}
 		rand_len = 30 + rand() % (60 - 30);
@@ -189,6 +190,7 @@ void print_plane(int shift, int key, bool f, int right, int left, int shuttle)
 	if (shuttle == 1) { pl = "plane1.txt"; }
 	ifstream plane(pl);
 	char t[80]; int i = 15;
+	SetColor(Yellow, Black);
 	while (plane.getline(t, 80))
 	{
 		int x = ((80 - strlen(t)) / 2);
@@ -209,6 +211,7 @@ void print_plane(int shift, int key, bool f, int right, int left, int shuttle)
 			}
 		}
 	}
+	SetColor(LightGray, Black);
 	plane.close();
 }
 int shot(int shift, int* shots, int length)
