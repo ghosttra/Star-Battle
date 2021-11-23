@@ -143,7 +143,6 @@ void clear_str(int x)
 	gotoxy(x, 1);
 	cout << ' ';
 }
-
 int entity_to_destroy()
 {
 	srand(time(0));

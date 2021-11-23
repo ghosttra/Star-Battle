@@ -15,7 +15,10 @@ void game()
 	while (true)
 	{
 		clear;
-		Rate rate;
+		gotoxy((80 - 12) / 2, 8);
+		SetColor(LightCyan, Black);
+		cout << "Star Battle";
+		SetColor(LightGray, Black);
 		Game Game;
 		Menu menu;
 		vector<string> m = {
