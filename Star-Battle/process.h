@@ -142,12 +142,12 @@ struct Game
 			ifstream save("rate.txt");
 			m.name = new char[16];
 			size_t i = 0;
-			int max = 0, hI, r=5;
+			int max = 0, hI, r=4;
 			while (save >> m.name >> m.score >> m.date.hour >> m.date.minute >> m.date.day >> m.date.month >> m.date.year)
 			{
 				gotoxy(0, r);
 				push_back_Array(p, size, m);
-				cout << i + 1 << ". " << p[i].name << " | Счёт: " << p[i].score << " | Время попытки: "; p[i].date.cprint();
+				cout << setw(central_output(50)) << i + 1 << ". " << p[i].name << " | Счёт: " << p[i].score << " | Время попытки: "; p[i].date.cprint();
 				i++; r++;
 				gotoxy(0, r);
 				for (size_t i = 0; i < size; i++)
@@ -158,10 +158,9 @@ struct Game
 						hI = i;
 					}
 				}
-
 				gotoxy(central_output(13),1);
 				cout << "Рекорд века!" << endl;
-				cout << p[hI].name << " | Счёт: " << p[hI].score << " | Время попытки: "; p[hI].date.cprint();
+				cout << setw(central_output(40)) <<p[hI].name << " | Счёт: " << p[hI].score << " | Время попытки: "; p[hI].date.cprint();
 			}
 			save.close();
 		}
