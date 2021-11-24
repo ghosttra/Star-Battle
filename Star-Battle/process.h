@@ -46,20 +46,7 @@ struct Date
 		day = ltm->tm_mday;
 		hour = ltm->tm_hour;
 		minute = ltm->tm_min;
-		a << hour << " " << minute << " " << day << " " << month << " " << year;
-		/*a << " | Время попытки: ";
-		if (hour < 10)
-			a << "0";
-		a << hour << ":";
-		if (minute < 10)
-			a << "0";
-		a << minute << " ";
-		if (day < 10)
-			a << "0";
-		a << day << "/";
-		if (month < 10)
-			a << "0";
-		a << month << "/" << year;*/
+		a << hour << " " << minute << " " << day << " " << month << " " << year << endl;
 	}
 	void cprint()
 	{
@@ -116,8 +103,9 @@ struct Game
 				{
 					for (size_t i = 0; i < size; i++)
 						a << p[i].name << " " << m.score << " "; m.date.print(a);
-					cout << endl;
+					
 				}
+				cout << endl;
 				a.close();
 				frame();
 				gotoxy((central_output(24)), 11);
@@ -276,7 +264,7 @@ void enemy(int* cord_mas_x, int* cord_mas_y, int cord_mas_size, int j, int x_sho
 	cout << " ";
 	cord_mas_y[j]++;
 	if (cord_mas_y[j] == 22 or x_shot == cord_mas_x[j])
-		cord_rand(cord_mas_y, cord_mas_x, cord_mas_size, j);
+		cord_rand(cord_mas_y, cord_mas_x, cord_mas_size, j);	
 }
 int hitbox(int cord_mas_size, int* cord_mas_x, int* cord_mas_y, int* hb, size_t j)
 {
@@ -302,8 +290,7 @@ void game_process(int contr, int shuttle)
 	int pl_length = 0, y_shot = 15, x_shot=0;
 	entity_to_destroy();
 	print_plane(0, 0, 0, 0, 0, shuttle, pl_length);
-	int barrier = 34, shift = 0, tscore = 0, score = 0, shot_temp, health = 3, seven = 7, i = 0;
-	int shots[80];
+	int barrier = 34, shift = 0, tscore = 0, score = 0, shot_temp, health = 3, seven = 7, i = 0, shots[80];
 	bool flag = 0, key_shot = 0;
 	gotoxy(1, 23);
 	cout << "Score: " << score;
@@ -312,11 +299,8 @@ void game_process(int contr, int shuttle)
 	cout << "<3 <3 <3";
 	SetColor(LightGray, Black);
 	set_score_array(shots, length);
-	const int cord_mas_size = 5;
-	const int hb_size = 3;
-	int cord_mas_x[cord_mas_size];
-	int cord_mas_y[cord_mas_size];
-	int hb[hb_size];
+	const int cord_mas_size = 5,hb_size = 3;
+	int cord_mas_x[cord_mas_size], cord_mas_y[cord_mas_size], hb[hb_size];
 	hb[2] = 16;
 	for (size_t i = 0; i < cord_mas_size; i++) {
 		cord_mas_x[i] = 30 + rand() % 70 - 30;
@@ -366,7 +350,7 @@ void game_process(int contr, int shuttle)
 			if (key == esc)
 				return;
 			gotoxy(1, 23);
-			cout << "Score: " << score << " " << health;
+			cout << "Score: " << score << " ";
 			if (tscore == length)
 			{
 				tscore = 0;
