@@ -48,7 +48,7 @@ struct Menu
 					SetColor(0, 15);
 				}
 
-			}
+			} 
 			c = _getch();
 			switch (c)
 			{
